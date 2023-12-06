@@ -1,0 +1,11 @@
+- name: Linux Update
+  hosts:
+    - grafana-server
+    - prometheus-server
+    - loki-server
+    - goapp-server
+    - nginx-server
+    - tempo-server
+  become: yes
+  roles:
+    - linux
