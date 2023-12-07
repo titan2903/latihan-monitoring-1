@@ -39,9 +39,8 @@
     dest: /etc/systemd/system/node_exporter.service
 
 - name: Reload systemd
-  ansible.builtin.systemd:
-    state: reloaded
-    daemon_reload: yes
+  ansible.builtin.command:
+    cmd: "systemctl daemon-reload"
 
 - name: Start Node Exporter service
   ansible.builtin.systemd:
