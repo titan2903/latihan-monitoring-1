@@ -6,6 +6,7 @@
 
 ## Pre-requisites
 
+* Install Ansible on your local computer
 * Set up six servers using [**Ubuntu Server 22.04.3 LTS**](https://ubuntu.com/download/server) for the Grafana, Loki, Prometheus, Tempo, Golang service and Nginx by deploying Virtual Machines (VMs) on a laptop, utilizing platforms such as [**VirtualBox**](https://www.virtualbox.org/) or a Cloud Provider
 * Virtual Machine (VM) specifications are as follows:
   * [**Ubuntu Server 22.04.3 LTS**](https://ubuntu.com/download/server)
@@ -26,6 +27,52 @@
 * Configure the Grafana Tempo server
 * Configure Grafana Tempo on the Golang server
 * Set up the Grafana server and establish integration with Prometheus, Loki and Tempo
+
+## Setup and Installation
+
+1. Clone this repository
+
+   ```sh
+    git clone https://github.com/titan2903/latihan-monitoring-1.git
+   ```
+
+2. Install and configure Grafana Tempo
+  
+    ```sh
+     ansible-playbook -i inventory.ini tempo-playbook.yaml
+    ```
+
+3. Install and configure Golang server and Golang service
+
+    ```sh
+     ansible-playbook -i inventory.ini goapp-playbook.yaml
+    ```
+
+4. Install and configure Nginx server
+
+    ```sh
+     ansible-playbook -i inventory.ini nginx-playbook.yaml
+    ```
+
+5. Install and configure Prometheus server
+
+    ```sh
+     ansible-playbook -i inventory.ini prometheus-playbook.yaml
+    ```
+
+6. Install and configure Loki server
+
+    ```sh
+     ansible-playbook -i inventory.ini loki-playbook.yaml
+    ```
+
+7. Install and configure Grafana server
+
+    ```sh
+     ansible-playbook -i inventory.ini grafana-playbook.yaml
+    ```
+
+8. Grafana running on port `3000`
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
