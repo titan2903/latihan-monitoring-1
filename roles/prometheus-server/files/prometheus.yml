@@ -48,3 +48,9 @@ scrape_configs:
     # machine by default.
     static_configs:
       - targets: ['10.184.0.8:9100']
+
+  - job_name: goapp-server
+    # If prometheus-node-exporter is installed, grab stats about the local
+    # machine by default.
+    static_configs:
+      - targets: ['10.184.0.12:9100']

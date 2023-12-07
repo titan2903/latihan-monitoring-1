@@ -1,0 +1,57 @@
+- name: Set hostname
+  hostname:
+    name: "{{ hostname }}"
+
+- name: Download file with get_url
+  ansible.builtin.get_url:
+    url: https://github.com/MuhRizkyPerdana/golang-sample/releases/download/1.0.0/linux-amd64
+    dest: /tmp/linux-amd64
+
+- name: Rename to goapp
+  ansible.builtin.command:
+    cmd: mv /tmp/linux-amd64 /tmp/goapp
+
+- name: Set permissions for goapp
+  ansible.builtin.file:
+    path: /tmp/goapp
+    mode: '0755'
+
+- name: Download Node Exporter tarball
+  ansible.builtin.get_url:
+    url: "https://github.com/prometheus/node_exporter/releases/download/v1.0.0-rc.0/node_exporter-1.0.0-rc.0.linux-amd64.tar.gz"
+    dest: "/tmp/node_exporter-1.0.0-rc.0.linux-amd64.tar.gz"
+
+- name: Extract Node Exporter tarball
+  ansible.builtin.unarchive:
+    src: "/tmp/node_exporter-1.0.0-rc.0.linux-amd64.tar.gz"
+    dest: "/tmp/"
+    remote_src: true
+
+- name: Move Node Exporter binary to /usr/local/bin/
+  ansible.builtin.command:
+    cmd: "mv /tmp/node_exporter-1.0.0-rc.0.linux-amd64/node_exporter /usr/local/bin/"
+
+- name: Clean up temporary files
+  ansible.builtin.file:
+    path: "/tmp/node_exporter-1.0.0-rc.0.linux-amd64"
+    state: absent
+  when: "'/tmp/node_exporter-1.0.0-rc.0.linux-amd64' is exists"
+
+- name: Copy node_exporter.service from local to server
+  ansible.builtin.copy:
+    src: files/node_exporter.service
+    dest: /etc/systemd/system/node_exporter.service
+
+- name: Reload systemd
+  ansible.builtin.command:
+    cmd: "systemctl daemon-reload"
+
+- name: Start Node Exporter service
+  ansible.builtin.systemd:
+    name: node_exporter.service
+    state: started
+
+- name: Enable Node Exporter service
+  ansible.builtin.systemd:
+    name: node_exporter.service
+    enabled: yes
