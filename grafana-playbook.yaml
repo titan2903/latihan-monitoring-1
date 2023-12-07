@@ -1,0 +1,6 @@
+- name: Setup grafana server
+  hosts: grafana-server
+  become: true
+  roles:
+    - linux
+    - grafana-server

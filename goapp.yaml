@@ -1,0 +1,6 @@
+- name: Setup goapp server
+  hosts: goapp-server
+  become: true
+  roles:
+    - linux
+    - goapp-server

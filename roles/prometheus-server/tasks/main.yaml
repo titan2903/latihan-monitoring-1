@@ -11,6 +11,8 @@
 - name: Add GPG key using gpg
   ansible.builtin.command:
     cmd: "mv /tmp/41EFC99D.gpg /etc/apt/trusted.gpg.d/41EFC99D.gpg"
+  notify:
+    - Update apt cache  # Notify the handler to update apt cache when repository is added
 
 - name: Install Prometheus components
   ansible.builtin.apt:
@@ -31,3 +33,13 @@
   ansible.builtin.systemd:
     name: prometheus
     enabled: yes
+
+- name: Copy prometheus.yml from local to server
+  ansible.builtin.copy:
+    src: files/prometheus.yml
+    dest: /etc/prometheus/prometheus.yml
+
+- name: Restart Prometheus service
+  ansible.builtin.systemd:
+    name: prometheus
+    state: restarted
