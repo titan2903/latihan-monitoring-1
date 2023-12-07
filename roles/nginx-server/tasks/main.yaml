@@ -11,6 +11,8 @@
   ansible.builtin.copy:
     src: files/example.html
     dest: /var/www/html/example.html
+  notify: 
+    - Restart nginx
 
 - name: Download Node Exporter tarball
   ansible.builtin.get_url:
