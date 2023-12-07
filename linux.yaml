@@ -1,4 +1,4 @@
-- name: Linux Update
+- name: Update packages on each servers
   hosts:
     - grafana-server
     - prometheus-server

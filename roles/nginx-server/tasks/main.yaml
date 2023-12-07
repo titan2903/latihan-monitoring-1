@@ -1,0 +1,54 @@
+- name: Set hostname
+  hostname:
+    name: "{{ hostname }}"
+
+- name: Install Nginx
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+
+- name: Copy example.html nginx from local to server
+  ansible.builtin.copy:
+    src: files/example.html
+    dest: /var/www/html/example.html
+
+- name: Download Node Exporter tarball
+  ansible.builtin.get_url:
+    url: "https://github.com/prometheus/node_exporter/releases/download/v1.0.0-rc.0/node_exporter-1.0.0-rc.0.linux-amd64.tar.gz"
+    dest: "/tmp/node_exporter-1.0.0-rc.0.linux-amd64.tar.gz"
+
+- name: Extract Node Exporter tarball
+  ansible.builtin.unarchive:
+    src: "/tmp/node_exporter-1.0.0-rc.0.linux-amd64.tar.gz"
+    dest: "/tmp/"
+    remote_src: true
+
+- name: Move Node Exporter binary to /usr/local/bin/
+  ansible.builtin.command:
+    cmd: "mv /tmp/node_exporter-1.0.0-rc.0.linux-amd64/node_exporter /usr/local/bin/"
+
+- name: Clean up temporary files
+  ansible.builtin.file:
+    path: "/tmp/node_exporter-1.0.0-rc.0.linux-amd64"
+    state: absent
+  when: "'/tmp/node_exporter-1.0.0-rc.0.linux-amd64' is exists"
+
+- name: Copy node_exporter.service from local to server
+  ansible.builtin.copy:
+    src: files/node_exporter.service
+    dest: /etc/systemd/system/node_exporter.service
+
+- name: Reload systemd
+  ansible.builtin.systemd:
+    state: reloaded
+    daemon_reload: yes
+
+- name: Start Node Exporter service
+  ansible.builtin.systemd:
+    name: node_exporter.service
+    state: started
+
+- name: Enable Node Exporter service
+  ansible.builtin.systemd:
+    name: node_exporter.service
+    enabled: yes

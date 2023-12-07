@@ -1,0 +1,33 @@
+- name: Set hostname
+  hostname:
+    name: "{{ hostname }}"
+
+# Install gpg keys for prometheus before Install prometheus
+- name: Download GPG key
+  ansible.builtin.get_url:
+    url: "https://s3-eu-west-1.amazonaws.com/deb.robustperception.io/41EFC99D.gpg"
+    dest: "/tmp/41EFC99D.gpg"
+
+- name: Add GPG key using gpg
+  ansible.builtin.command:
+    cmd: "mv /tmp/41EFC99D.gpg /etc/apt/trusted.gpg.d/41EFC99D.gpg"
+
+- name: Install Prometheus components
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - prometheus
+    - prometheus-node-exporter
+    - prometheus-pushgateway
+    - prometheus-alertmanager
+
+- name: Start Prometheus service
+  ansible.builtin.systemd:
+    name: prometheus
+    state: started
+
+- name: Enable Prometheus service on boot
+  ansible.builtin.systemd:
+    name: prometheus
+    enabled: yes
