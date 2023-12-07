@@ -1,3 +1,12 @@
 - name: Set hostname
   hostname:
     name: "{{ hostname }}"
+
+- name: Download Tempo Debian package
+  get_url:
+    url: "https://github.com/grafana/tempo/releases/download/v2.3.1/tempo_2.3.1_linux_amd64.deb"
+    dest: "/tmp/tempo_2.3.1_linux_amd64.deb"
+
+- name: Install Tempo Debian package
+  apt:
+    deb: "/tmp/tempo_2.3.1_linux_amd64.deb"
