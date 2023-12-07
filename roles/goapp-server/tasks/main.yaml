@@ -2,6 +2,11 @@
   hostname:
     name: "{{ hostname }}"
 
+- name: Install unzip
+  ansible.builtin.package:
+    name: unzip
+    state: present
+
 - name: Download file with get_url
   ansible.builtin.get_url:
     url: https://github.com/MuhRizkyPerdana/golang-sample/releases/download/1.0.0/linux-amd64
@@ -46,12 +51,89 @@
   ansible.builtin.command:
     cmd: "systemctl daemon-reload"
 
+- name: Enable Node Exporter service
+  ansible.builtin.systemd:
+    name: node_exporter.service
+    enabled: yes
+
 - name: Start Node Exporter service
   ansible.builtin.systemd:
     name: node_exporter.service
     state: started
 
-- name: Enable Node Exporter service
+- name: Download promtail-linux-amd64.zip
+  ansible.builtin.get_url:
+    url: "https://github.com/grafana/loki/releases/download/v2.9.2/promtail-linux-amd64.zip"
+    dest: "/tmp/promtail-linux-amd64.zip"
+    mode: '0644'  # Set the desired permissions
+
+- name: Unzip promtail-linux-amd64.zip
+  ansible.builtin.unarchive:
+    src: "/tmp/promtail-linux-amd64.zip"
+    dest: "/usr/local/bin/"
+    remote_src: true
+
+- name: Change promtail name
+  ansible.builtin.command:
+    cmd: "mv /usr/local/bin/promtail-linux-amd64 /usr/local/bin/promtail"
+
+- name: Create promtail-config directory
+  ansible.builtin.file:
+    path: /home/titan/promtail-config
+    state: directory
+
+- name: Copy promtail-local-config.yaml nginx from local to server
+  ansible.builtin.copy:
+    src: files/promtail-local-config.yaml
+    dest: /home/titan/promtail-config/promtail-local-config.yaml
+
+- name: Copy goapp.service from local to server
+  ansible.builtin.copy:
+    src: files/goapp.service
+    dest: /etc/systemd/system/goapp.service
+
+- name: Reload systemd
+  ansible.builtin.command:
+    cmd: "systemctl daemon-reload"
+
+- name: Enable Go app service
   ansible.builtin.systemd:
-    name: node_exporter.service
+    name: goapp.service
     enabled: yes
+
+- name: Start Go app service
+  ansible.builtin.systemd:
+    name: goapp.service
+    state: started
+
+- name: change permissions
+  file:
+    path: /tmp/goapp.log
+    state: file
+    owner: root
+    group: root
+    mode: "0775"
+
+- name: Restart goapp.service
+  systemd:
+    name: goapp.service
+    state: restarted
+
+- name: Copy promtail.service from local to server
+  ansible.builtin.copy:
+    src: files/promtail.service
+    dest: /etc/systemd/system/promtail.service
+
+- name: Reload systemd
+  ansible.builtin.command:
+    cmd: "systemctl daemon-reload"
+
+- name: Enable Promtail service
+  ansible.builtin.systemd:
+    name: promtail.service
+    enabled: yes
+
+- name: Start Promtail service
+  ansible.builtin.systemd:
+    name: promtail.service
+    state: started

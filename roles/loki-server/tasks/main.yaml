@@ -1,0 +1,53 @@
+- name: Set hostname
+  hostname:
+    name: "{{ hostname }}"
+
+- name: Install unzip
+  ansible.builtin.package:
+    name: unzip
+    state: present
+
+- name: Download loki-linux-amd64.zip
+  ansible.builtin.get_url:
+    url: "https://github.com/grafana/loki/releases/download/v2.9.2/loki-linux-amd64.zip"
+    dest: "/tmp/loki-linux-amd64.zip"
+    mode: '0644'  # Set the desired permissions
+
+- name: Unzip loki-linux-amd64.zip
+  ansible.builtin.unarchive:
+    src: "/tmp/loki-linux-amd64.zip"
+    dest: "/usr/local/bin/"
+    remote_src: true
+
+- name: Change loki name
+  ansible.builtin.command:
+    cmd: "mv /usr/local/bin/loki-linux-amd64 /usr/local/bin/loki"
+
+- name: Create loki-config directory
+  ansible.builtin.file:
+    path: /home/titan/loki-config
+    state: directory
+
+- name: Copy loki-local-config.yaml nginx from local to server
+  ansible.builtin.copy:
+    src: files/loki-local-config.yaml
+    dest: /home/titan/loki-config/loki-local-config.yaml
+
+- name: Copy loki.service from local to server
+  ansible.builtin.copy:
+    src: files/loki.service
+    dest: /etc/systemd/system/loki.service
+
+- name: Reload systemd
+  ansible.builtin.command:
+    cmd: "systemctl daemon-reload"
+
+- name: Enable Loki service
+  ansible.builtin.systemd:
+    name: loki.service
+    enabled: yes
+
+- name: Start Loki service
+  ansible.builtin.systemd:
+    name: loki.service
+    state: started

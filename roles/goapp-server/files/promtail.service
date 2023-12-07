@@ -1,0 +1,13 @@
+[Unit]
+Description=Promtail Service
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=root
+Group=root
+Type=simple
+ExecStart=/usr/local/bin/promtail --config.file=/home/titan/promtail-config/promtail-local-config.yaml
+
+[Install]
+WantedBy=multi-user.target

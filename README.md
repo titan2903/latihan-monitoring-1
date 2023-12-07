@@ -13,3 +13,4 @@
 * Install and configure the Node Exporter agent on the Golang server and integrate it with Prometheus
 * Install and configure the Promtail agent on the Golang server and integrate it with Loki
 * Set up the Grafana server and establish integration with Prometheus and Loki
+* Configure the Tempo server

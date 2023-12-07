@@ -1,5 +1,5 @@
 [Unit]
-Description=Go app Service
+Description=Loki Service
 Wants=network-online.target
 After=network-online.target
 
@@ -7,7 +7,7 @@ After=network-online.target
 User=root
 Group=root
 Type=simple
-ExecStart=/tmp/goapp --log-file
+ExecStart=/usr/local/bin/loki --config.file=/home/titan/loki-config/loki-local-config.yaml
 
 [Install]
 WantedBy=multi-user.target

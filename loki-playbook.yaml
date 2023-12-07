@@ -1,0 +1,6 @@
+- name: Setup loki server
+  hosts: loki-server
+  become: true
+  roles:
+    - linux
+    - loki-server
