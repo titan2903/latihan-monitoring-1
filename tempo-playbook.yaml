@@ -1,0 +1,6 @@
+- name: Setup tempo server
+  hosts: tempo-server
+  become: true
+  roles:
+    - linux
+    - tempo-server

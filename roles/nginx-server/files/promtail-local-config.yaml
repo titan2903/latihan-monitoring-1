@@ -1,3 +1,4 @@
+# https://github.com/grafana/loki/blob/main/clients/cmd/promtail/promtail-local-config.yaml
 server:
   http_listen_port: 9080
   grpc_listen_port: 0
