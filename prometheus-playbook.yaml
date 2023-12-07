@@ -1,8 +1,6 @@
 - name: Setup prometheus server
   hosts: prometheus-server
   become: true
-  vars:
-    - prometheus_dir_configuration: "/etc/prometheus"
   roles:
     - linux
     - prometheus-server
