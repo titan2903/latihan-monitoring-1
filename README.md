@@ -12,6 +12,6 @@
 * Install and configure the Promtail agent on the Nginx server and integrate it with Loki
 * Install and configure the Node Exporter agent on the Golang server and integrate it with Prometheus
 * Install and configure the Promtail agent on the Golang server and integrate it with Loki
-* Set up the Grafana server and establish integration with Prometheus, Loki and Tempo
 * Configure the Grafana Tempo server
 * Configure Grafana Tempo on the Golang server
+* Set up the Grafana server and establish integration with Prometheus, Loki and Tempo
