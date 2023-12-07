@@ -28,6 +28,8 @@
 * Configure Grafana Tempo on the Golang server
 * Set up the Grafana server and establish integration with Prometheus, Loki and Tempo
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ## Setup and Installation
 
 1. Clone this repository
@@ -76,6 +78,8 @@
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 [Ansible-url]: https://www.ansible.com/
 [Ansible-image]: https://img.shields.io/badge/ansible-FFFFF0?style=for-the-badge&logo=ansible&logoColor=black
